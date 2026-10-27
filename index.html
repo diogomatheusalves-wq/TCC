@@ -294,7 +294,58 @@
 
     .btn-primary:hover { background: #C2185B; }
 
-    /* Mercado Pago */
+    .btn-danger {
+      background: #FFEBEE;
+      color: #C62828;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Formulário de Cliente */
+    .form-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      max-width: 600px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: #E91E63;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
     .mp-card {
       background: white;
       border-radius: 16px;
@@ -308,30 +359,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px;
-    }
-
-    .form-group input, .form-group select {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #E91E63;
     }
 
     .switch-row {
@@ -358,6 +385,7 @@
         border-radius: 20px;
         font-size: 13px;
       }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -384,8 +412,6 @@
     </header>
 
     <div class="cliente-content">
-
-      <!-- VITRINE -->
       <div id="vitrine" class="screen active">
         <h2 class="screen-title">Vitrine</h2>
         <div class="empty-state">
@@ -394,37 +420,14 @@
         </div>
       </div>
 
-      <!-- CARRINHO -->
       <div id="carrinho" class="screen">
         <h2 class="screen-title">Carrinho</h2>
-        
         <div class="empty-state">
           <div class="emoji">🛒</div>
           <p>Seu carrinho está vazio</p>
         </div>
-
-        <!-- Área de pagamento (aparece quando tiver itens) -->
-        <div style="display:none;" id="area-pagamento">
-          <h3 style="margin: 24px 0 12px; font-size: 16px;">Forma de Pagamento</h3>
-          <div class="pagamento-opcoes">
-            <label class="opcao-pag selected">
-              <input type="radio" name="pagamento" value="pix" checked>
-              <span>💙 Pix (Mercado Pago)</span>
-            </label>
-            <label class="opcao-pag">
-              <input type="radio" name="pagamento" value="cartao">
-              <span>💳 Cartão de Crédito / Débito</span>
-            </label>
-            <label class="opcao-pag">
-              <input type="radio" name="pagamento" value="boleto">
-              <span>📄 Boleto Bancário</span>
-            </label>
-          </div>
-          <button class="btn-finalizar">Finalizar Pedido</button>
-        </div>
       </div>
 
-      <!-- MEUS PEDIDOS -->
       <div id="pedidos" class="screen">
         <h2 class="screen-title">Meus Pedidos</h2>
         <div class="empty-state">
@@ -457,6 +460,7 @@
         <div class="sidebar-logo">🍰 Doce Sabor</div>
         <div class="sidebar-menu">
           <div class="menu-item active" onclick="trocarAdmin('dashboard', this)">📊 Dashboard</div>
+          <div class="menu-item" onclick="trocarAdmin('clientes', this)">👥 Clientes</div>
           <div class="menu-item" onclick="trocarAdmin('produtos', this)">🧁 Produtos & Estoque</div>
           <div class="menu-item" onclick="trocarAdmin('pedidos-admin', this)">📦 Pedidos & Entrega</div>
           <div class="menu-item" onclick="trocarAdmin('pagamentos', this)">💳 Mercado Pago</div>
@@ -482,13 +486,82 @@
               <div class="value">—</div>
             </div>
             <div class="stat-card">
+              <div class="label">Total de Clientes</div>
+              <div class="value" id="total-clientes">0</div>
+            </div>
+            <div class="stat-card">
               <div class="label">Itens em Estoque</div>
               <div class="value">—</div>
             </div>
-            <div class="stat-card">
-              <div class="label">Estoque Baixo</div>
-              <div class="value">—</div>
+          </div>
+        </div>
+
+        <!-- ==================== CLIENTES ==================== -->
+        <div id="clientes" class="admin-section">
+          <div class="admin-header">
+            <h1>Clientes</h1>
+          </div>
+
+          <!-- Formulário de Novo Cliente -->
+          <div class="form-card">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">➕ Adicionar Novo Cliente</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nome Completo *</label>
+                <input type="text" id="cli-nome" placeholder="Ex: Maria Silva" required>
+              </div>
+              <div class="form-group">
+                <label>Telefone / WhatsApp *</label>
+                <input type="text" id="cli-telefone" placeholder="Ex: (11) 99999-9999" required>
+              </div>
             </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="cli-email" placeholder="Ex: maria@email.com">
+              </div>
+              <div class="form-group">
+                <label>CPF</label>
+                <input type="text" id="cli-cpf" placeholder="Ex: 000.000.000-00">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Endereço Completo</label>
+              <input type="text" id="cli-endereco" placeholder="Rua, Número, Bairro, Cidade">
+            </div>
+
+            <div class="form-group">
+              <label>Observações</label>
+              <textarea id="cli-obs" rows="2" placeholder="Alguma observação sobre o cliente..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="adicionarCliente()">Salvar Cliente</button>
+          </div>
+
+          <!-- Lista de Clientes -->
+          <div class="table-card">
+            <h3 style="margin-bottom: 16px; font-size: 16px;">Lista de Clientes</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Telefone</th>
+                  <th>E-mail</th>
+                  <th>Endereço</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-clientes">
+                <tr>
+                  <td colspan="5" style="text-align:center; color:#888; padding:40px;">
+                    Nenhum cliente cadastrado
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -622,12 +695,16 @@
   </div>
 
   <script>
+    // Array que guarda os clientes
+    let clientes = [];
+
     function entrarComo(tipo) {
       document.getElementById('login-screen').style.display = 'none';
       if (tipo === 'cliente') {
         document.getElementById('cliente-area').style.display = 'flex';
       } else {
         document.getElementById('admin-area').style.display = 'block';
+        renderClientes();
       }
     }
 
@@ -651,13 +728,79 @@
       el.classList.add('active');
     }
 
-    // Seleção visual das opções de pagamento
-    document.addEventListener('change', (e) => {
-      if (e.target.name === 'pagamento') {
-        document.querySelectorAll('.opcao-pag').forEach(o => o.classList.remove('selected'));
-        e.target.closest('.opcao-pag').classList.add('selected');
+    // ==================== CLIENTES ====================
+    function adicionarCliente() {
+      const nome = document.getElementById('cli-nome').value.trim();
+      const telefone = document.getElementById('cli-telefone').value.trim();
+      const email = document.getElementById('cli-email').value.trim();
+      const cpf = document.getElementById('cli-cpf').value.trim();
+      const endereco = document.getElementById('cli-endereco').value.trim();
+      const obs = document.getElementById('cli-obs').value.trim();
+
+      if (!nome || !telefone) {
+        alert('Nome e Telefone são obrigatórios!');
+        return;
       }
-    });
+
+      const novoCliente = {
+        id: Date.now(),
+        nome,
+        telefone,
+        email,
+        cpf,
+        endereco,
+        obs
+      };
+
+      clientes.push(novoCliente);
+      limparFormularioCliente();
+      renderClientes();
+      alert('Cliente cadastrado com sucesso!');
+    }
+
+    function limparFormularioCliente() {
+      document.getElementById('cli-nome').value = '';
+      document.getElementById('cli-telefone').value = '';
+      document.getElementById('cli-email').value = '';
+      document.getElementById('cli-cpf').value = '';
+      document.getElementById('cli-endereco').value = '';
+      document.getElementById('cli-obs').value = '';
+    }
+
+    function excluirCliente(id) {
+      if (confirm('Deseja realmente excluir este cliente?')) {
+        clientes = clientes.filter(c => c.id !== id);
+        renderClientes();
+      }
+    }
+
+    function renderClientes() {
+      const tbody = document.getElementById('lista-clientes');
+      document.getElementById('total-clientes').textContent = clientes.length;
+
+      if (clientes.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color:#888; padding:40px;">
+              Nenhum cliente cadastrado
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = clientes.map(c => `
+        <tr>
+          <td><strong>${c.nome}</strong></td>
+          <td>${c.telefone}</td>
+          <td>${c.email || '—'}</td>
+          <td>${c.endereco || '—'}</td>
+          <td>
+            <button class="btn-danger" onclick="excluirCliente(${c.id})">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    }
   </script>
 </body>
 </html>
