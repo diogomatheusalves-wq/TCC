@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doce Sabor - Sistema</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #FFF5F5;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* ==================== LOGIN ==================== */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(180deg, #FFF5F5 0%, #FFE4E8 100%);
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-area .emoji { font-size: 72px; margin-bottom: 12px; }
+    .logo-area h1 { font-size: 28px; color: #E91E63; margin-bottom: 6px; }
+    .logo-area p { color: #888; font-size: 15px; }
+
+    .role-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .role-btn {
+      padding: 18px 24px;
+      border: none;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+    }
+
+    .role-btn.cliente { background: #E91E63; color: white; }
+    .role-btn.admin { background: white; color: #E91E63; border: 2px solid #E91E63; }
+    .role-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(233, 30, 99, 0.25); }
+
+    /* ==================== CLIENTE ==================== */
+    #cliente-area {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .cliente-header {
+      background: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f0d0d0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .cliente-header h2 { font-size: 18px; color: #E91E63; }
+    .btn-sair { background: none; border: none; color: #E91E63; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+    .cliente-content {
+      flex: 1;
+      padding: 20px 16px 100px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .screen-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+    }
+
+    .empty-state .emoji { font-size: 52px; margin-bottom: 12px; }
+
+    /* Pagamento */
+    .pagamento-opcoes {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .opcao-pag {
+      background: white;
+      border: 2px solid #eee;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .opcao-pag:hover, .opcao-pag.selected {
+      border-color: #E91E63;
+      background: #FFF0F3;
+    }
+
+    .opcao-pag input { accent-color: #E91E63; }
+
+    .btn-finalizar {
+      width: 100%;
+      margin-top: 16px;
+      padding: 14px;
+      background: #E91E63;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Tab bar */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid #f0d0d0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 12px;
+      color: #999;
+    }
+
+    .tab.active { color: #E91E63; }
+    .tab .icon { font-size: 22px; }
+    .tab .label { font-size: 11px; font-weight: 500; }
+
+    /* ==================== ADMIN ==================== */
+    #admin-area { display: none; min-height: 100vh; }
+
+    .admin-layout { display: flex; min-height: 100vh; }
+
+    .sidebar {
+      width: 240px;
+      background: #E91E63;
+      color: white;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 0 24px 30px;
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-menu { flex: 1; }
+
+    .menu-item {
+      padding: 14px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+      font-size: 15px;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .sidebar-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-sair-admin {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      width: 100%;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .admin-content {
+      flex: 1;
+      background: #FFF5F5;
+      padding: 30px;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .admin-header h1 { font-size: 24px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .stat-card .label { font-size: 13px; color: #888; margin-bottom: 8px; }
+    .stat-card .value { font-size: 26px; font-weight: 700; color: #E91E63; }
+
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+
+    .table-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      overflow-x: auto;
+      margin-bottom: 20px;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    th { font-size: 13px; color: #888; font-weight: 600; }
+
+    .btn-primary {
+      background: #E91E63;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-primary:hover { background: #C2185B; }
+
+    /* Mercado Pago */
+    .mp-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      max-width: 500px;
+    }
+
+    .mp-card h3 {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #E91E63;
+    }
+
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    @media (max-width: 768px) {
+      .admin-layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 12px;
+      }
+      .sidebar-logo, .sidebar-footer { display: none; }
+      .sidebar-menu { display: flex; gap: 6px; }
+      .menu-item {
+        white-space: nowrap;
+        padding: 10px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== LOGIN ==================== -->
+  <div id="login-screen">
+    <div class="logo-area">
+      <div class="emoji">🍰</div>
+      <h1>Doce Sabor</h1>
+      <p>Sistema de Pedidos & Gestão</p>
+    </div>
+    <div class="role-buttons">
+      <button class="role-btn cliente" onclick="entrarComo('cliente')">👤 Área do Cliente</button>
+      <button class="role-btn admin" onclick="entrarComo('admin')">⚙️ Área do Administrador</button>
+    </div>
+  </div>
+
+  <!-- ==================== ÁREA DO CLIENTE ==================== -->
+  <div id="cliente-area">
+    <header class="cliente-header">
+      <h2>🍰 Doce Sabor</h2>
+      <button class="btn-sair" onclick="sair()">Sair</button>
+    </header>
+
+    <div class="cliente-content">
+
+      <!-- VITRINE -->
+      <div id="vitrine" class="screen active">
+        <h2 class="screen-title">Vitrine</h2>
+        <div class="empty-state">
+          <div class="emoji">🧁</div>
+          <p>Nenhum produto cadastrado</p>
+        </div>
+      </div>
+
+      <!-- CARRINHO -->
+      <div id="carrinho" class="screen">
+        <h2 class="screen-title">Carrinho</h2>
+        
+        <div class="empty-state">
+          <div class="emoji">🛒</div>
+          <p>Seu carrinho está vazio</p>
+        </div>
+
+        <!-- Área de pagamento (aparece quando tiver itens) -->
+        <div style="display:none;" id="area-pagamento">
+          <h3 style="margin: 24px 0 12px; font-size: 16px;">Forma de Pagamento</h3>
+          <div class="pagamento-opcoes">
+            <label class="opcao-pag selected">
+              <input type="radio" name="pagamento" value="pix" checked>
+              <span>💙 Pix (Mercado Pago)</span>
+            </label>
+            <label class="opcao-pag">
+              <input type="radio" name="pagamento" value="cartao">
+              <span>💳 Cartão de Crédito / Débito</span>
+            </label>
+            <label class="opcao-pag">
+              <input type="radio" name="pagamento" value="boleto">
+              <span>📄 Boleto Bancário</span>
+            </label>
+          </div>
+          <button class="btn-finalizar">Finalizar Pedido</button>
+        </div>
+      </div>
+
+      <!-- MEUS PEDIDOS -->
+      <div id="pedidos" class="screen">
+        <h2 class="screen-title">Meus Pedidos</h2>
+        <div class="empty-state">
+          <div class="emoji">📦</div>
+          <p>Você ainda não fez nenhum pedido</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="tab-bar">
+      <div class="tab active" onclick="trocarAba('vitrine', this)">
+        <span class="icon">🧁</span>
+        <span class="label">Vitrine</span>
+      </div>
+      <div class="tab" onclick="trocarAba('carrinho', this)">
+        <span class="icon">🛒</span>
+        <span class="label">Carrinho</span>
+      </div>
+      <div class="tab" onclick="trocarAba('pedidos', this)">
+        <span class="icon">📦</span>
+        <span class="label">Pedidos</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ==================== ÁREA DO ADMIN ==================== -->
+  <div id="admin-area">
+    <div class="admin-layout">
+      <aside class="sidebar">
+        <div class="sidebar-logo">🍰 Doce Sabor</div>
+        <div class="sidebar-menu">
+          <div class="menu-item active" onclick="trocarAdmin('dashboard', this)">📊 Dashboard</div>
+          <div class="menu-item" onclick="trocarAdmin('produtos', this)">🧁 Produtos & Estoque</div>
+          <div class="menu-item" onclick="trocarAdmin('pedidos-admin', this)">📦 Pedidos & Entrega</div>
+          <div class="menu-item" onclick="trocarAdmin('pagamentos', this)">💳 Mercado Pago</div>
+          <div class="menu-item" onclick="trocarAdmin('config', this)">⚙️ Configurações</div>
+        </div>
+        <div class="sidebar-footer">
+          <button class="btn-sair-admin" onclick="sair()">Sair</button>
+        </div>
+      </aside>
+
+      <main class="admin-content">
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="admin-section active">
+          <div class="admin-header"><h1>Dashboard</h1></div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="label">Pedidos Hoje</div>
+              <div class="value">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Faturamento</div>
+              <div class="value">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Itens em Estoque</div>
+              <div class="value">—</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Estoque Baixo</div>
+              <div class="value">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUTOS + ESTOQUE -->
+        <div id="produtos" class="admin-section">
+          <div class="admin-header">
+            <h1>Produtos & Estoque</h1>
+            <button class="btn-primary">+ Novo Produto</button>
+          </div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Preço</th>
+                  <th>Estoque</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="5" style="text-align:center; color:#888; padding:40px;">
+                    Nenhum produto cadastrado
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PEDIDOS + ENTREGA -->
+        <div id="pedidos-admin" class="admin-section">
+          <div class="admin-header"><h1>Pedidos & Acompanhamento de Entrega</h1></div>
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nº</th>
+                  <th>Cliente</th>
+                  <th>Itens</th>
+                  <th>Total</th>
+                  <th>Pagamento</th>
+                  <th>Status Entrega</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="7" style="text-align:center; color:#888; padding:40px;">
+                    Nenhum pedido encontrado
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- MERCADO PAGO -->
+        <div id="pagamentos" class="admin-section">
+          <div class="admin-header"><h1>Formas de Pagamento – Mercado Pago</h1></div>
+          
+          <div class="mp-card">
+            <h3>💙 Integração Mercado Pago</h3>
+            
+            <div class="form-group">
+              <label>Access Token (Produção)</label>
+              <input type="password" placeholder="Cole seu Access Token aqui">
+            </div>
+            
+            <div class="form-group">
+              <label>Public Key</label>
+              <input type="text" placeholder="Cole sua Public Key aqui">
+            </div>
+
+            <div style="margin: 24px 0 12px; font-weight: 600;">Métodos Ativados</div>
+            
+            <div class="switch-row">
+              <span>Pix</span>
+              <strong style="color:#388E3C">Ativo</strong>
+            </div>
+            <div class="switch-row">
+              <span>Cartão de Crédito</span>
+              <strong style="color:#388E3C">Ativo</strong>
+            </div>
+            <div class="switch-row">
+              <span>Cartão de Débito</span>
+              <strong style="color:#388E3C">Ativo</strong>
+            </div>
+            <div class="switch-row">
+              <span>Boleto Bancário</span>
+              <strong style="color:#388E3C">Ativo</strong>
+            </div>
+            <div class="switch-row">
+              <span>Parcelamento (até 12x)</span>
+              <strong style="color:#388E3C">Ativo</strong>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 24px; width: 100%;">
+              Salvar Configurações
+            </button>
+          </div>
+        </div>
+
+        <!-- CONFIGURAÇÕES -->
+        <div id="config" class="admin-section">
+          <div class="admin-header"><h1>Configurações</h1></div>
+          <div class="table-card">
+            <div class="form-group">
+              <label>Nome da Loja</label>
+              <input type="text" placeholder="Ex: Doce Sabor">
+            </div>
+            <div class="form-group">
+              <label>Horário de Funcionamento</label>
+              <input type="text" placeholder="Ex: Seg a Sáb – 09:00 às 20:00">
+            </div>
+            <div class="form-group">
+              <label>Taxa de Entrega</label>
+              <input type="text" placeholder="Ex: R$ 8,00">
+            </div>
+            <div class="form-group">
+              <label>Tempo Médio de Preparo</label>
+              <input type="text" placeholder="Ex: 40 minutos">
+            </div>
+            <button class="btn-primary" style="margin-top: 10px;">Salvar</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function entrarComo(tipo) {
+      document.getElementById('login-screen').style.display = 'none';
+      if (tipo === 'cliente') {
+        document.getElementById('cliente-area').style.display = 'flex';
+      } else {
+        document.getElementById('admin-area').style.display = 'block';
+      }
+    }
+
+    function sair() {
+      document.getElementById('cliente-area').style.display = 'none';
+      document.getElementById('admin-area').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    function trocarAba(id, el) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function trocarAdmin(id, el) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Seleção visual das opções de pagamento
+    document.addEventListener('change', (e) => {
+      if (e.target.name === 'pagamento') {
+        document.querySelectorAll('.opcao-pag').forEach(o => o.classList.remove('selected'));
+        e.target.closest('.opcao-pag').classList.add('selected');
+      }
+    });
+  </script>
+</body>
+</html>
