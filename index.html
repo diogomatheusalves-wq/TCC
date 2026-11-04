@@ -15,59 +15,188 @@
       <h1>Doce Sabor</h1>
       <p>Sistema de Pedidos & Gestão</p>
     </div>
-    <div class="role-buttons">
-      <button class="role-btn cliente" onclick="entrarComo('cliente')">👤 Área do Cliente</button>
-      <button class="role-btn admin" onclick="entrarComo('admin')">⚙️ Área do Administrador</button>
+
+    <div id="role-buttons" class="role-buttons">
+      <button class="role-btn cliente" onclick="abrirLoginCliente()">👤 Área do Cliente</button>
+      <button class="role-btn admin" onclick="abrirLoginAdmin()">⚙️ Área do Administrador</button>
+    </div>
+
+    <div id="cliente-login-panel" class="client-login-panel">
+      <div id="cliente-login-form">
+        <h2>Login do Cliente</h2>
+        <div class="client-login-field">
+          <label for="cliente-login-cpf">CPF</label>
+          <input id="cliente-login-cpf" type="text" placeholder="000.000.000-00" maxlength="14" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-login-senha">Senha</label>
+          <input id="cliente-login-senha" type="password" placeholder="Digite sua senha" />
+        </div>
+        <button class="role-btn cliente full-width" onclick="loginCliente()">Entrar</button>
+      </div>
+
+      <div id="cliente-register-form" style="display:none;">
+        <h2>Cadastro do Cliente</h2>
+        <div class="client-login-field">
+          <label for="cliente-register-nome">Nome completo</label>
+          <input id="cliente-register-nome" type="text" placeholder="Seu nome completo" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-register-cpf">CPF</label>
+          <input id="cliente-register-cpf" type="text" placeholder="000.000.000-00" maxlength="14" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-register-telefone">Telefone</label>
+          <input id="cliente-register-telefone" type="text" placeholder="(00) 00000-0000" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-register-email">E-mail</label>
+          <input id="cliente-register-email" type="email" placeholder="seuemail@email.com" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-register-endereco">Endereço</label>
+          <input id="cliente-register-endereco" type="text" placeholder="Rua, número, bairro" />
+        </div>
+        <div class="client-login-field">
+          <label for="cliente-register-senha">Senha</label>
+          <input id="cliente-register-senha" type="password" placeholder="Crie uma senha" />
+        </div>
+        <button class="role-btn cliente full-width" onclick="registerCliente()">Criar conta</button>
+      </div>
+
+      <button id="cliente-toggle-register" class="client-login-back" onclick="toggleClienteRegister()">Criar conta</button>
+      <button class="client-login-back" onclick="voltarAoMenu()">Voltar</button>
+      <p id="cliente-login-error" class="client-login-error"></p>
+    </div>
+
+    <div id="admin-login-panel" class="client-login-panel">
+      <h2>Login do Administrador</h2>
+
+      <div id="admin-login-form">
+        <div class="client-login-field">
+          <label for="admin-login-email">E-mail</label>
+          <input id="admin-login-email" type="email" placeholder="admin@doce-sabor.com" />
+        </div>
+        <div class="client-login-field">
+          <label for="admin-login-senha">Senha</label>
+          <input id="admin-login-senha" type="password" placeholder="Digite a senha do admin" />
+        </div>
+        <button class="role-btn admin full-width" onclick="loginAdmin()">Entrar</button>
+      </div>
+
+      <div id="admin-register-form" style="display:none;">
+        <div class="client-login-field">
+          <label for="admin-register-nome">Nome</label>
+          <input id="admin-register-nome" type="text" placeholder="Seu nome completo" />
+        </div>
+        <div class="client-login-field">
+          <label for="admin-register-email">E-mail</label>
+          <input id="admin-register-email" type="email" placeholder="novo@doce-sabor.com" />
+        </div>
+        <div class="client-login-field">
+          <label for="admin-register-senha">Senha</label>
+          <input id="admin-register-senha" type="password" placeholder="Crie uma senha" />
+        </div>
+        <button class="role-btn admin full-width" onclick="registerAdmin()">Cadastrar</button>
+      </div>
+
+      <button id="admin-toggle-register" class="client-login-back" onclick="toggleAdminRegister()">Criar conta de administrador</button>
+      <button class="client-login-back" onclick="voltarAoMenu()">Voltar</button>
+      <p id="admin-login-error" class="client-login-error"></p>
     </div>
   </div>
 
   <!-- ==================== ÁREA DO CLIENTE ==================== -->
   <div id="cliente-area">
-    <header class="cliente-header">
-      <h2>🍰 Doce Sabor</h2>
-      <button class="btn-sair" onclick="sair()">Sair</button>
-    </header>
+    <div class="client-layout">
+      <aside class="client-sidebar">
+        <div class="client-brand">🍰 Doce Sabor</div>
 
-    <div class="cliente-content">
-      <div id="vitrine" class="screen active">
-        <h2 class="screen-title">Vitrine</h2>
-        <div class="empty-state">
-          <div class="emoji">🧁</div>
-          <p>Nenhum produto cadastrado</p>
+        <div class="client-user-card">
+          <div class="client-user-avatar" id="cliente-avatar">C</div>
+          <div class="client-user-meta">
+            <span>Cliente</span>
+            <strong id="cliente-sidebar-name">Visitante</strong>
+          </div>
         </div>
-      </div>
 
-      <div id="carrinho" class="screen">
-        <h2 class="screen-title">Carrinho</h2>
-        <div class="empty-state">
-          <div class="emoji">🛒</div>
-          <p>Seu carrinho está vazio</p>
+        <div class="client-menu">
+          <div class="client-menu-item active" data-target="vitrine" onclick="trocarAba('vitrine', this)">
+            <span>🧁</span>
+            <span>Vitrine</span>
+          </div>
+          <div class="client-menu-item" data-target="carrinho" onclick="trocarAba('carrinho', this)">
+            <span>🛒</span>
+            <span>Carrinho</span>
+          </div>
+          <div class="client-menu-item" data-target="pedidos" onclick="trocarAba('pedidos', this)">
+            <span>📦</span>
+            <span>Meus Pedidos</span>
+          </div>
         </div>
-      </div>
 
-      <div id="pedidos" class="screen">
-        <h2 class="screen-title">Meus Pedidos</h2>
-        <div class="empty-state">
-          <div class="emoji">📦</div>
-          <p>Você ainda não fez nenhum pedido</p>
+        <div class="client-sidebar-footer">
+          <button class="btn-sair" onclick="sair()">Sair</button>
         </div>
-      </div>
+      </aside>
+
+      <main class="client-main">
+        <header class="cliente-header">
+          <div class="cliente-header-copy">
+            <span class="cliente-badge">Cliente</span>
+            <h2 id="cliente-header-title">Bem-vindo ao painel</h2>
+          </div>
+
+          <div class="cliente-header-user">
+            <div class="cliente-header-avatar" id="cliente-topbar-avatar">C</div>
+            <div>
+              <span>Conectado como</span>
+              <strong id="cliente-topbar-name">Cliente</strong>
+            </div>
+          </div>
+
+          <button class="btn-sair" onclick="sair()">Sair</button>
+        </header>
+
+        <div class="cliente-content">
+          <div id="vitrine" class="screen active">
+            <h2 class="screen-title">Vitrine</h2>
+            <div class="empty-state">
+              <div class="emoji">🧁</div>
+              <p>Nenhum produto cadastrado</p>
+            </div>
+          </div>
+
+          <div id="carrinho" class="screen">
+            <h2 class="screen-title">Carrinho</h2>
+            <div class="empty-state">
+              <div class="emoji">🛒</div>
+              <p>Seu carrinho está vazio</p>
+            </div>
+          </div>
+
+          <div id="pedidos" class="screen">
+            <h2 class="screen-title">Meus Pedidos</h2>
+            <div id="pedidos-cliente-list"></div>
+          </div>
+        </div>
+
+        <nav class="tab-bar">
+          <div class="tab active" data-target="vitrine" onclick="trocarAba('vitrine', this)">
+            <span class="icon">🧁</span>
+            <span class="label">Vitrine</span>
+          </div>
+          <div class="tab" data-target="carrinho" onclick="trocarAba('carrinho', this)">
+            <span class="icon">🛒</span>
+            <span class="label">Carrinho</span>
+          </div>
+          <div class="tab" data-target="pedidos" onclick="trocarAba('pedidos', this)">
+            <span class="icon">📦</span>
+            <span class="label">Pedidos</span>
+          </div>
+        </nav>
+      </main>
     </div>
-
-    <nav class="tab-bar">
-      <div class="tab active" onclick="trocarAba('vitrine', this)">
-        <span class="icon">🧁</span>
-        <span class="label">Vitrine</span>
-      </div>
-      <div class="tab" onclick="trocarAba('carrinho', this)">
-        <span class="icon">🛒</span>
-        <span class="label">Carrinho</span>
-      </div>
-      <div class="tab" onclick="trocarAba('pedidos', this)">
-        <span class="icon">📦</span>
-        <span class="label">Pedidos</span>
-      </div>
-    </nav>
   </div>
 
   <!-- ==================== ÁREA DO ADMIN ==================== -->
@@ -75,12 +204,20 @@
     <div class="admin-layout">
       <aside class="sidebar">
         <div class="sidebar-logo">🍰 Doce Sabor</div>
+
+        <div class="admin-profile-card">
+          <div class="admin-avatar" id="admin-avatar">A</div>
+          <div class="admin-profile-meta">
+            <span>Administrador</span>
+            <strong id="admin-profile-name">Carregando...</strong>
+          </div>
+        </div>
+
         <div class="sidebar-menu">
           <div class="menu-item active" onclick="trocarAdmin('dashboard', this)">📊 Dashboard</div>
-          <div class="menu-item" onclick="trocarAdmin('clientes', this)">👥 Clientes</div>
           <div class="menu-item" onclick="trocarAdmin('produtos', this)">🧁 Produtos & Estoque</div>
           <div class="menu-item" onclick="trocarAdmin('pedidos-admin', this)">📦 Pedidos & Entrega</div>
-          <div class="menu-item" onclick="trocarAdmin('pagamentos', this)">💳 Mercado Pago</div>
+          <div class="menu-item" onclick="trocarAdmin('perfil', this)">👤 Perfil</div>
           <div class="menu-item" onclick="trocarAdmin('config', this)">⚙️ Configurações</div>
         </div>
         <div class="sidebar-footer">
@@ -89,6 +226,19 @@
       </aside>
 
       <main class="admin-content">
+        <div class="admin-topbar">
+          <div>
+            <div class="admin-topbar-label">Painel administrativo</div>
+            <h2>Doce Sabor</h2>
+          </div>
+          <div class="admin-topbar-user">
+            <div class="admin-topbar-avatar" id="admin-topbar-avatar">A</div>
+            <div>
+              <span>Conectado como</span>
+              <strong id="admin-topbar-name">Administrador</strong>
+            </div>
+          </div>
+        </div>
 
         <!-- DASHBOARD -->
         <div id="dashboard" class="admin-section active">
@@ -96,11 +246,11 @@
           <div class="stats-grid">
             <div class="stat-card">
               <div class="label">Pedidos Hoje</div>
-              <div class="value">—</div>
+              <div class="value" id="total-pedidos">0</div>
             </div>
             <div class="stat-card">
               <div class="label">Faturamento</div>
-              <div class="value">—</div>
+              <div class="value" id="faturamento">R$ 0,00</div>
             </div>
             <div class="stat-card">
               <div class="label">Total de Clientes</div>
@@ -108,13 +258,76 @@
             </div>
             <div class="stat-card">
               <div class="label">Itens em Estoque</div>
-              <div class="value">—</div>
+              <div class="value" id="estoque-total">0</div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="premium-panel">
+              <div class="panel-header">
+                <span class="panel-badge">Operação</span>
+                <h3>Resumo do dia</h3>
+              </div>
+              <div class="mini-metrics">
+                <div>
+                  <small>Entrega em andamento</small>
+                  <strong>18</strong>
+                </div>
+                <div>
+                  <small>Novos clientes</small>
+                  <strong>05</strong>
+                </div>
+                <div>
+                  <small>Meta de faturamento</small>
+                  <strong>85%</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="premium-panel">
+              <div class="panel-header">
+                <span class="panel-badge">Ações rápidas</span>
+                <h3>Menu de gestão</h3>
+              </div>
+              <div class="quick-actions">
+                <button class="quick-action" onclick="trocarAdmin('produtos', document.querySelector('.menu-item:nth-child(2)'))">Adicionar produto</button>
+                <button class="quick-action" onclick="trocarAdmin('pedidos-admin', document.querySelector('.menu-item:nth-child(3)'))">Ver pedidos</button>
+                <button class="quick-action" onclick="trocarAdmin('perfil', document.querySelector('.menu-item:nth-child(4)'))">Perfil da loja</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== PERFIL ==================== -->
+        <div id="perfil" class="admin-section">
+          <div class="admin-header">
+            <h1>Perfil do Administrador</h1>
+          </div>
+
+          <div class="profile-card">
+            <div class="profile-header">
+              <div class="profile-avatar" id="profile-avatar">A</div>
+              <div>
+                <span class="profile-label">Conta ativa</span>
+                <h3 id="profile-name">Administrador</h3>
+              </div>
+            </div>
+
+            <div class="profile-grid">
+              <div class="profile-field">
+                <label>Nome</label>
+                <div id="profile-display-name">-</div>
+              </div>
+              <div class="profile-field">
+                <label>E-mail</label>
+                <div id="profile-email">-</div>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- ==================== CLIENTES ==================== -->
-        <div id="clientes" class="admin-section">
+        <div id="clientes" class="admin-section" style="display:none;">
           <div class="admin-header">
             <h1>Clientes</h1>
           </div>
@@ -158,9 +371,15 @@
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Observações</label>
-              <textarea id="cli-obs" rows="2" placeholder="Alguma observação sobre o cliente..."></textarea>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Senha de acesso *</label>
+                <input type="password" id="cli-senha" placeholder="Crie uma senha para o cliente" required>
+              </div>
+              <div class="form-group">
+                <label>Observações</label>
+                <textarea id="cli-obs" rows="2" placeholder="Alguma observação sobre o cliente..."></textarea>
+              </div>
             </div>
 
             <button class="btn-primary" onclick="adicionarCliente()">Salvar Cliente</button>
@@ -195,8 +414,44 @@
         <div id="produtos" class="admin-section">
           <div class="admin-header">
             <h1>Produtos & Estoque</h1>
-            <button class="btn-primary">+ Novo Produto</button>
           </div>
+
+          <div class="form-card">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">➕ Adicionar Novo Produto</h3>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nome do Produto *</label>
+                <input type="text" id="prod-nome" placeholder="Ex: Bolo de Chocolate">
+              </div>
+              <div class="form-group">
+                <label>Preço *</label>
+                <input type="number" id="prod-preco" step="0.01" min="0" placeholder="Ex: 35.00">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Estoque *</label>
+                <input type="number" id="prod-estoque" min="0" placeholder="Ex: 20">
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select id="prod-status">
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Descrição</label>
+              <textarea id="prod-descricao" rows="3" placeholder="Descrição do produto..."></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="adicionarProduto()">Salvar Produto</button>
+          </div>
+
           <div class="table-card">
             <table>
               <thead>
@@ -208,7 +463,7 @@
                   <th>Ações</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="lista-produtos">
                 <tr>
                   <td colspan="5" style="text-align:center; color:#888; padding:40px;">
                     Nenhum produto cadastrado
@@ -228,67 +483,20 @@
                 <tr>
                   <th>Nº</th>
                   <th>Cliente</th>
-                  <th>Itens</th>
                   <th>Total</th>
                   <th>Pagamento</th>
                   <th>Status Entrega</th>
                   <th>Ação</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="lista-pedidos">
                 <tr>
-                  <td colspan="7" style="text-align:center; color:#888; padding:40px;">
+                  <td colspan="6" style="text-align:center; color:#888; padding:40px;">
                     Nenhum pedido encontrado
                   </td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-
-        <!-- MERCADO PAGO -->
-        <div id="pagamentos" class="admin-section">
-          <div class="admin-header"><h1>Formas de Pagamento – Mercado Pago</h1></div>
-          
-          <div class="mp-card">
-            <h3>💙 Integração Mercado Pago</h3>
-            
-            <div class="form-group">
-              <label>Access Token (Produção)</label>
-              <input type="password" placeholder="Cole seu Access Token aqui">
-            </div>
-            
-            <div class="form-group">
-              <label>Public Key</label>
-              <input type="text" placeholder="Cole sua Public Key aqui">
-            </div>
-
-            <div style="margin: 24px 0 12px; font-weight: 600;">Métodos Ativados</div>
-            
-            <div class="switch-row">
-              <span>Pix</span>
-              <strong style="color:#388E3C">Ativo</strong>
-            </div>
-            <div class="switch-row">
-              <span>Cartão de Crédito</span>
-              <strong style="color:#388E3C">Ativo</strong>
-            </div>
-            <div class="switch-row">
-              <span>Cartão de Débito</span>
-              <strong style="color:#388E3C">Ativo</strong>
-            </div>
-            <div class="switch-row">
-              <span>Boleto Bancário</span>
-              <strong style="color:#388E3C">Ativo</strong>
-            </div>
-            <div class="switch-row">
-              <span>Parcelamento (até 12x)</span>
-              <strong style="color:#388E3C">Ativo</strong>
-            </div>
-
-            <button class="btn-primary" style="margin-top: 24px; width: 100%;">
-              Salvar Configurações
-            </button>
           </div>
         </div>
 
@@ -321,29 +529,450 @@
   </div>
 
   <script>
-    // Array que guarda os clientes
+    const API_URL = 'http://localhost:3000';
     let clientes = [];
+    let produtos = [];
+    let pedidos = [];
+    let carrinho = [];
+    let pagamentoSelecionado = 'pix';
+
+    function formatarCpf(valor = '') {
+      const apenasNumeros = String(valor).replace(/\D/g, '');
+      if (apenasNumeros.length !== 11) return valor || '—';
+      return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    }
+
+    function formatarMoeda(valor) {
+      return Number(valor || 0).toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+
+    function calcularTotalCarrinho() {
+      return carrinho.reduce((total, item) => total + (Number(item.preco) * Number(item.quantidade)), 0);
+    }
+
+    function atualizarPerfilAdmin(admin) {
+      const nome = admin?.nome || 'Administrador';
+      const email = admin?.email || 'admin@doce-sabor.com';
+      const inicial = (nome || 'A').trim().charAt(0).toUpperCase();
+
+      document.getElementById('admin-profile-name').textContent = nome;
+      document.getElementById('admin-avatar').textContent = inicial;
+      document.getElementById('admin-topbar-avatar').textContent = inicial;
+      document.getElementById('admin-topbar-name').textContent = nome;
+      document.getElementById('profile-name').textContent = nome;
+      document.getElementById('profile-display-name').textContent = nome;
+      document.getElementById('profile-email').textContent = email;
+      document.getElementById('profile-avatar').textContent = inicial;
+    }
+
+    async function carregarDashboard() {
+      try {
+        const response = await fetch(`${API_URL}/dashboard`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Erro ao buscar resumo');
+        const dados = await response.json();
+
+        document.getElementById('total-clientes').textContent = dados.totalClientes || 0;
+        document.getElementById('total-pedidos').textContent = dados.totalPedidos || 0;
+        document.getElementById('estoque-total').textContent = dados.estoqueTotal || 0;
+        document.getElementById('faturamento').textContent = formatarMoeda(dados.faturamento || 0);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function carregarClientes() {
+      try {
+        const response = await fetch(`${API_URL}/clientes`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Erro ao buscar clientes');
+
+        clientes = await response.json();
+        renderClientes();
+      } catch (error) {
+        console.error(error);
+        clientes = [];
+        renderClientes();
+      }
+    }
+
+    async function carregarProdutos() {
+      try {
+        const response = await fetch(`${API_URL}/produtos`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Erro ao buscar produtos');
+
+        produtos = await response.json();
+        renderProdutos();
+        renderVitrine();
+      } catch (error) {
+        console.error(error);
+        produtos = [];
+        renderProdutos();
+        renderVitrine();
+      }
+    }
+
+    async function carregarPedidos() {
+      try {
+        const response = await fetch(`${API_URL}/pedidos`, { credentials: 'include' });
+        if (!response.ok) throw new Error('Erro ao buscar pedidos');
+
+        pedidos = await response.json();
+        renderPedidos();
+      } catch (error) {
+        console.error(error);
+        pedidos = [];
+        renderPedidos();
+      }
+    }
+
+    async function carregarDadosAdmin() {
+      await Promise.all([carregarClientes(), carregarProdutos(), carregarPedidos(), carregarDashboard()]);
+    }
+
+    async function carregarProdutosCliente() {
+      await carregarProdutos();
+      const clienteInput = document.getElementById('cliente-id-input');
+      if (clienteInput && clientes.length > 0 && !clienteInput.value) {
+        clienteInput.value = clientes[0].id;
+      }
+      carregarPedidosCliente();
+    }
+
+    async function carregarPedidosCliente() {
+      const clienteId = document.getElementById('cliente-id-input')?.value;
+      if (!clienteId) {
+        renderPedidosCliente();
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/pedidos/${clienteId}`);
+        if (!response.ok) throw new Error('Erro ao buscar pedidos do cliente');
+        const dados = await response.json();
+        renderPedidosCliente(dados);
+      } catch (error) {
+        console.error(error);
+        renderPedidosCliente([]);
+      }
+    }
+
+    function renderPedidosCliente(lista = []) {
+      const container = document.getElementById('pedidos-cliente-list');
+      if (!container) return;
+
+      const itens = lista.length ? lista : [];
+      if (!itens.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">📦</div>
+            <p>Você ainda não fez nenhum pedido</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = itens.map(p => `
+        <div class="cart-card" style="margin-bottom:12px;">
+          <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px;">
+            <strong>Pedido #${p.id}</strong>
+            <span>${p.status_entrega || 'pendente'}</span>
+          </div>
+          <div class="linha"><span>Pagamento</span><strong>${p.pagamento || 'pix'}</strong></div>
+          <div class="linha"><span>Total</span><strong>${formatarMoeda(p.total)}</strong></div>
+        </div>
+      `).join('');
+    }
+
+    function abrirLoginCliente() {
+      document.getElementById('role-buttons').style.display = 'none';
+      document.getElementById('cliente-login-panel').style.display = 'block';
+      document.getElementById('admin-login-panel').style.display = 'none';
+      document.getElementById('cliente-login-cpf').focus();
+    }
+
+    function abrirLoginAdmin() {
+      document.getElementById('role-buttons').style.display = 'none';
+      document.getElementById('admin-login-panel').style.display = 'block';
+      document.getElementById('cliente-login-panel').style.display = 'none';
+      document.getElementById('admin-login-email').focus();
+    }
+
+    function voltarAoMenu() {
+      document.getElementById('role-buttons').style.display = 'flex';
+      document.getElementById('cliente-login-panel').style.display = 'none';
+      document.getElementById('admin-login-panel').style.display = 'none';
+      document.getElementById('cliente-login-error').textContent = '';
+      document.getElementById('admin-login-error').textContent = '';
+      document.getElementById('cliente-login-cpf').value = '';
+      document.getElementById('cliente-login-senha').value = '';
+      document.getElementById('cliente-register-nome').value = '';
+      document.getElementById('cliente-register-cpf').value = '';
+      document.getElementById('cliente-register-telefone').value = '';
+      document.getElementById('cliente-register-email').value = '';
+      document.getElementById('cliente-register-endereco').value = '';
+      document.getElementById('cliente-register-senha').value = '';
+      document.getElementById('admin-login-email').value = '';
+      document.getElementById('admin-login-senha').value = '';
+      document.getElementById('admin-register-nome').value = '';
+      document.getElementById('admin-register-email').value = '';
+      document.getElementById('admin-register-senha').value = '';
+      toggleClienteRegister(false);
+    }
+
+    function toggleClienteRegister(forceValue) {
+      const loginForm = document.getElementById('cliente-login-form');
+      const registerForm = document.getElementById('cliente-register-form');
+      const toggle = document.getElementById('cliente-toggle-register');
+      const showingRegister = typeof forceValue === 'boolean' ? forceValue : registerForm.style.display !== 'none';
+
+      registerForm.style.display = showingRegister ? 'block' : 'none';
+      loginForm.style.display = showingRegister ? 'none' : 'block';
+      toggle.textContent = showingRegister ? 'Já tenho conta' : 'Criar conta';
+    }
+
+    async function registerCliente() {
+      const nome = document.getElementById('cliente-register-nome').value.trim();
+      const cpf = document.getElementById('cliente-register-cpf').value.trim();
+      const telefone = document.getElementById('cliente-register-telefone').value.trim();
+      const email = document.getElementById('cliente-register-email').value.trim();
+      const endereco = document.getElementById('cliente-register-endereco').value.trim();
+      const senha = document.getElementById('cliente-register-senha').value.trim();
+      const erro = document.getElementById('cliente-login-error');
+
+      if (!nome || !cpf || !telefone || !senha) {
+        erro.textContent = 'Preencha nome, CPF, telefone e senha para criar a conta.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/clientes/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, cpf, telefone, email, endereco, senha })
+        });
+
+        const dados = await response.json();
+        if (!response.ok) {
+          throw new Error(dados.error || 'Não foi possível criar a conta do cliente');
+        }
+
+        document.getElementById('cliente-login-cpf').value = cpf;
+        document.getElementById('cliente-login-senha').value = senha;
+        erro.textContent = '';
+        toggleClienteRegister(false);
+        await loginCliente();
+      } catch (error) {
+        erro.textContent = error.message;
+      }
+    }
+
+    async function loginCliente() {
+      const cpf = document.getElementById('cliente-login-cpf').value.trim();
+      const senha = document.getElementById('cliente-login-senha').value.trim();
+      const erro = document.getElementById('cliente-login-error');
+
+      if (!cpf || !senha) {
+        erro.textContent = 'Informe o CPF e a senha para continuar.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/clientes/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cpf, senha })
+        });
+
+        const dados = await response.json();
+        if (!response.ok) throw new Error(dados.error || 'CPF ou senha inválidos');
+
+        const cliente = dados.cliente;
+        const clienteIdInput = document.getElementById('cliente-id-input');
+        if (clienteIdInput) clienteIdInput.value = cliente.id;
+
+        const nomeCliente = cliente.nome || 'Cliente';
+        const inicialCliente = (nomeCliente || 'C').trim().charAt(0).toUpperCase();
+
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('cliente-area').style.display = 'flex';
+        document.getElementById('cliente-login-panel').style.display = 'none';
+        document.getElementById('role-buttons').style.display = 'flex';
+
+        const title = document.getElementById('cliente-header-title');
+        if (title && nomeCliente) title.textContent = `Bem-vindo, ${nomeCliente.split(' ')[0]}`;
+
+        const sidebarName = document.getElementById('cliente-sidebar-name');
+        if (sidebarName) sidebarName.textContent = nomeCliente;
+
+        const topbarName = document.getElementById('cliente-topbar-name');
+        if (topbarName) topbarName.textContent = nomeCliente;
+
+        const avatarCliente = document.getElementById('cliente-avatar');
+        if (avatarCliente) avatarCliente.textContent = inicialCliente;
+
+        const topbarAvatar = document.getElementById('cliente-topbar-avatar');
+        if (topbarAvatar) topbarAvatar.textContent = inicialCliente;
+
+        erro.textContent = '';
+        carregarClientes();
+        carregarProdutosCliente();
+      } catch (error) {
+        erro.textContent = error.message;
+      }
+    }
+
+    function toggleAdminRegister() {
+      const loginForm = document.getElementById('admin-login-form');
+      const registerForm = document.getElementById('admin-register-form');
+      const toggle = document.getElementById('admin-toggle-register');
+
+      const showingRegister = registerForm.style.display !== 'none';
+      registerForm.style.display = showingRegister ? 'none' : 'block';
+      loginForm.style.display = showingRegister ? 'block' : 'none';
+      toggle.textContent = showingRegister ? 'Criar conta de administrador' : 'Já tenho conta';
+    }
+
+    async function registerAdmin() {
+      const nome = document.getElementById('admin-register-nome').value.trim();
+      const email = document.getElementById('admin-register-email').value.trim();
+      const senha = document.getElementById('admin-register-senha').value.trim();
+      const erro = document.getElementById('admin-login-error');
+
+      if (!nome || !email || !senha) {
+        erro.textContent = 'Preencha nome, e-mail e senha para cadastrar.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/admin/register`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, email, senha })
+        });
+
+        const dados = await response.json();
+        if (!response.ok) throw new Error(dados.error || 'Não foi possível cadastrar administrador');
+
+        atualizarPerfilAdmin(dados.admin);
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-area').style.display = 'block';
+        document.getElementById('admin-login-panel').style.display = 'none';
+        document.getElementById('role-buttons').style.display = 'flex';
+        erro.textContent = '';
+        carregarDadosAdmin();
+      } catch (error) {
+        erro.textContent = error.message;
+      }
+    }
+
+    async function loginAdmin() {
+      const email = document.getElementById('admin-login-email').value.trim();
+      const senha = document.getElementById('admin-login-senha').value.trim();
+      const erro = document.getElementById('admin-login-error');
+
+      if (!email || !senha) {
+        erro.textContent = 'Informe o e-mail e a senha do administrador.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/admin/login`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+
+        const dados = await response.json();
+        if (!response.ok) throw new Error(dados.error || 'E-mail ou senha inválidos');
+
+        atualizarPerfilAdmin(dados.admin);
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-area').style.display = 'block';
+        document.getElementById('cliente-area').style.display = 'none';
+        document.getElementById('admin-login-panel').style.display = 'none';
+        document.getElementById('role-buttons').style.display = 'flex';
+        erro.textContent = '';
+
+        carregarDadosAdmin();
+      } catch (error) {
+        erro.textContent = error.message;
+      }
+    }
+
+    async function checkAdminSession() {
+      try {
+        const response = await fetch(`${API_URL}/admin/session`, { credentials: 'include' });
+        if (!response.ok) return;
+        const dados = await response.json();
+        if (dados.loggedIn) {
+          atualizarPerfilAdmin(dados.admin);
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('admin-area').style.display = 'block';
+          document.getElementById('cliente-area').style.display = 'none';
+          carregarDadosAdmin();
+        }
+      } catch (error) {
+        console.warn('Sessão do administrador não encontrada', error);
+      }
+    }
 
     function entrarComo(tipo) {
       document.getElementById('login-screen').style.display = 'none';
       if (tipo === 'cliente') {
         document.getElementById('cliente-area').style.display = 'flex';
+        carregarClientes();
+        carregarProdutosCliente();
       } else {
         document.getElementById('admin-area').style.display = 'block';
-        renderClientes();
+        carregarDadosAdmin();
       }
     }
 
-    function sair() {
+    async function sair() {
+      const adminAreaVisible = document.getElementById('admin-area').style.display !== 'none';
+      if (adminAreaVisible) {
+        try {
+          await fetch(`${API_URL}/admin/logout`, { method: 'POST', credentials: 'include' });
+        } catch (error) {
+          console.warn('Erro ao encerrar sessão do admin', error);
+        }
+      }
+
       document.getElementById('cliente-area').style.display = 'none';
       document.getElementById('admin-area').style.display = 'none';
       document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('role-buttons').style.display = 'flex';
+      document.getElementById('cliente-login-panel').style.display = 'none';
+      document.getElementById('admin-login-panel').style.display = 'none';
+      document.getElementById('cliente-login-error').textContent = '';
+      document.getElementById('admin-login-error').textContent = '';
+      document.getElementById('cliente-login-cpf').value = '';
+      document.getElementById('cliente-login-senha').value = '';
+      document.getElementById('cliente-register-nome').value = '';
+      document.getElementById('cliente-register-cpf').value = '';
+      document.getElementById('cliente-register-telefone').value = '';
+      document.getElementById('cliente-register-email').value = '';
+      document.getElementById('cliente-register-endereco').value = '';
+      document.getElementById('cliente-register-senha').value = '';
+      document.getElementById('admin-login-email').value = '';
+      document.getElementById('admin-login-senha').value = '';
+      document.getElementById('admin-register-nome').value = '';
+      document.getElementById('admin-register-email').value = '';
+      document.getElementById('admin-register-senha').value = '';
+      toggleClienteRegister(false);
+      carrinho = [];
+      pagamentoSelecionado = 'pix';
+      renderCarrinho();
     }
 
     function trocarAba(id, el) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab, .client-menu-item').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
     }
 
@@ -356,60 +985,89 @@
 
     // ==================== MÁSCARA CPF ====================
     document.addEventListener('DOMContentLoaded', function() {
+      checkAdminSession();
+
       const cpfInput = document.getElementById('cli-cpf');
       if (cpfInput) {
         cpfInput.addEventListener('input', function(e) {
-          let value = e.target.value.replace(/\D/g, ''); // só números
-          
+          let value = e.target.value.replace(/\D/g, '');
+
           if (value.length > 11) value = value.slice(0, 11);
-          
+
           value = value.replace(/(\d{3})(\d)/, '$1.$2');
           value = value.replace(/(\d{3})(\d)/, '$1.$2');
           value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-          
+
           e.target.value = value;
+        });
+      }
+
+      const clienteLoginCpfInput = document.getElementById('cliente-login-cpf');
+      if (clienteLoginCpfInput) {
+        clienteLoginCpfInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 11) value = value.slice(0, 11);
+          value = value.replace(/(\d{3})(\d)/, '$1.$2');
+          value = value.replace(/(\d{3})(\d)/, '$1.$2');
+          value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+          e.target.value = value;
+        });
+      }
+
+      const clienteInput = document.getElementById('cliente-id-input');
+      if (clienteInput) {
+        clienteInput.addEventListener('change', function() {
+          carregarPedidosCliente();
         });
       }
     });
 
     // ==================== CLIENTES ====================
-    function adicionarCliente() {
+    async function adicionarCliente() {
       const cpf = document.getElementById('cli-cpf').value.trim();
+      const senha = document.getElementById('cli-senha').value.trim();
       const nome = document.getElementById('cli-nome').value.trim();
       const telefone = document.getElementById('cli-telefone').value.trim();
       const email = document.getElementById('cli-email').value.trim();
       const endereco = document.getElementById('cli-endereco').value.trim();
       const obs = document.getElementById('cli-obs').value.trim();
 
-      if (!cpf || !nome || !telefone) {
-        alert('CPF, Nome e Telefone são obrigatórios!');
+      if (!cpf || !nome || !telefone || !senha) {
+        alert('CPF, Nome, Telefone e Senha são obrigatórios!');
         return;
       }
 
-      // Verifica se o CPF já existe
-      if (clientes.some(c => c.cpf === cpf)) {
-        alert('Já existe um cliente cadastrado com este CPF!');
-        return;
+      try {
+        const response = await fetch(`${API_URL}/clientes`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ cpf, senha, nome, telefone, email, endereco, obs })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Não foi possível salvar o cliente');
+        }
+
+        limparFormularioCliente();
+        await carregarDadosAdmin();
+        if (!document.getElementById('cliente-id-input').value) {
+          document.getElementById('cliente-id-input').value = data.id;
+        }
+        alert(data.message || 'Cliente cadastrado com sucesso!');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao cadastrar cliente');
       }
-
-      const novoCliente = {
-        id: Date.now(),
-        cpf,
-        nome,
-        telefone,
-        email,
-        endereco,
-        obs
-      };
-
-      clientes.push(novoCliente);
-      limparFormularioCliente();
-      renderClientes();
-      alert('Cliente cadastrado com sucesso!');
     }
 
     function limparFormularioCliente() {
       document.getElementById('cli-cpf').value = '';
+      document.getElementById('cli-senha').value = '';
       document.getElementById('cli-nome').value = '';
       document.getElementById('cli-telefone').value = '';
       document.getElementById('cli-email').value = '';
@@ -417,16 +1075,39 @@
       document.getElementById('cli-obs').value = '';
     }
 
-    function excluirCliente(id) {
-      if (confirm('Deseja realmente excluir este cliente?')) {
-        clientes = clientes.filter(c => c.id !== id);
-        renderClientes();
+    async function excluirCliente(id) {
+      if (!confirm('Deseja realmente excluir este cliente?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/clientes/${id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Não foi possível excluir cliente');
+        }
+
+        await carregarDadosAdmin();
+        alert(data.message || 'Cliente excluído com sucesso!');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao excluir cliente');
       }
     }
 
     function renderClientes() {
       const tbody = document.getElementById('lista-clientes');
-      document.getElementById('total-clientes').textContent = clientes.length;
+      const totalClientes = document.getElementById('total-clientes');
+
+      if (totalClientes) {
+        totalClientes.textContent = clientes.length;
+      }
+
+      if (!tbody) return;
 
       if (clientes.length === 0) {
         tbody.innerHTML = `
@@ -441,13 +1122,367 @@
 
       tbody.innerHTML = clientes.map(c => `
         <tr>
-          <td>${c.cpf}</td>
+          <td>${formatarCpf(c.cpf)}</td>
           <td><strong>${c.nome}</strong></td>
           <td>${c.telefone}</td>
           <td>${c.email || '—'}</td>
           <td>${c.endereco || '—'}</td>
           <td>
             <button class="btn-danger" onclick="excluirCliente(${c.id})">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ==================== PRODUTOS ====================
+    async function adicionarProduto() {
+      const nome = document.getElementById('prod-nome').value.trim();
+      const descricao = document.getElementById('prod-descricao').value.trim();
+      const preco = document.getElementById('prod-preco').value;
+      const estoque = document.getElementById('prod-estoque').value;
+      const status = document.getElementById('prod-status').value;
+
+      if (!nome || !preco || estoque === '') {
+        alert('Nome, preço e estoque são obrigatórios!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/produtos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nome, descricao, preco, estoque, status })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Não foi possível salvar o produto');
+        }
+
+        document.getElementById('prod-nome').value = '';
+        document.getElementById('prod-descricao').value = '';
+        document.getElementById('prod-preco').value = '';
+        document.getElementById('prod-estoque').value = '';
+        document.getElementById('prod-status').value = 'ativo';
+
+        await carregarDadosAdmin();
+        alert(data.message || 'Produto cadastrado com sucesso!');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao cadastrar produto');
+      }
+    }
+
+    async function excluirProduto(id) {
+      if (!confirm('Deseja realmente excluir este produto?')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/produtos/${id}`, {
+          method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Não foi possível excluir produto');
+        }
+
+        await carregarDadosAdmin();
+        alert(data.message || 'Produto excluído com sucesso!');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao excluir produto');
+      }
+    }
+
+    function renderProdutos() {
+      const tbody = document.getElementById('lista-produtos');
+
+      if (!tbody) return;
+
+      if (produtos.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color:#888; padding:40px;">
+              Nenhum produto cadastrado
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = produtos.map(p => `
+        <tr>
+          <td><strong>${p.nome}</strong></td>
+          <td>${formatarMoeda(p.preco)}</td>
+          <td>${p.estoque}</td>
+          <td>${p.status === 'ativo' ? 'Ativo' : 'Inativo'}</td>
+          <td>
+            <button class="btn-danger" onclick="excluirProduto(${p.id})">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderVitrine() {
+      const container = document.getElementById('vitrine');
+      if (!container) return;
+
+      if (!produtos.length) {
+        container.innerHTML = `
+          <h2 class="screen-title">Vitrine</h2>
+          <div class="empty-state">
+            <div class="emoji">🧁</div>
+            <p>Nenhum produto cadastrado</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <h2 class="screen-title">Vitrine</h2>
+        <div class="cliente-pedido-box premium-box">
+          <div class="premium-box-header">
+            <h3>Cliente para o pedido</h3>
+            <span class="brown-pill">Ativo</span>
+          </div>
+          <div class="input-row">
+            <input id="cliente-id-input" type="number" min="1" placeholder="ID do cliente" />
+            <button class="btn-secundario" onclick="carregarPedidosCliente()">Atualizar</button>
+          </div>
+        </div>
+        <div class="produto-grid">
+          ${produtos.map(p => `
+            <div class="produto-card">
+              <div class="produto-topo">
+                <span class="produto-tag">Especial</span>
+                <span class="produto-price">${formatarMoeda(p.preco)}</span>
+              </div>
+              <h4>${p.nome}</h4>
+              <p>${p.descricao || 'Produto disponível no nosso cardápio.'}</p>
+              <div class="produto-info">
+                <span>Estoque: ${p.estoque}</span>
+                <span class="produto-status">Disponível</span>
+              </div>
+              <button class="btn-primary" onclick="adicionarAoCarrinho(${p.id})">Adicionar ao carrinho</button>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      if (!document.getElementById('cliente-id-input').value && clientes.length > 0) {
+        document.getElementById('cliente-id-input').value = clientes[0].id;
+      }
+    }
+
+    function adicionarAoCarrinho(produtoId) {
+      const produto = produtos.find(p => p.id === produtoId);
+      if (!produto) return;
+
+      const existente = carrinho.find(item => item.id === produtoId);
+      if (existente) {
+        existente.quantidade += 1;
+      } else {
+        carrinho.push({
+          id: produto.id,
+          nome: produto.nome,
+          preco: Number(produto.preco),
+          quantidade: 1
+        });
+      }
+
+      renderCarrinho();
+      const cartNav = document.querySelector('.tab[data-target="carrinho"], .client-menu-item[data-target="carrinho"]');
+      if (cartNav) trocarAba('carrinho', cartNav);
+    }
+
+    function atualizarQuantidade(id, delta) {
+      const item = carrinho.find(i => i.id === id);
+      if (!item) return;
+
+      item.quantidade += delta;
+      if (item.quantidade <= 0) {
+        carrinho = carrinho.filter(i => i.id !== id);
+      }
+
+      renderCarrinho();
+    }
+
+    function renderCarrinho() {
+      const container = document.getElementById('carrinho');
+      if (!container) return;
+
+      if (!carrinho.length) {
+        container.innerHTML = `
+          <h2 class="screen-title">Carrinho</h2>
+          <div class="empty-state">
+            <div class="emoji">🛒</div>
+            <p>Seu carrinho está vazio</p>
+          </div>
+        `;
+        return;
+      }
+
+      const total = calcularTotalCarrinho();
+      container.innerHTML = `
+        <h2 class="screen-title">Carrinho</h2>
+        <div class="cart-card">
+          ${carrinho.map(item => `
+            <div class="cart-item">
+              <div>
+                <strong>${item.nome}</strong>
+                <div class="qty-controls">
+                  <button class="qty-btn" onclick="atualizarQuantidade(${item.id}, -1)">-</button>
+                  <span>${item.quantidade}</span>
+                  <button class="qty-btn" onclick="atualizarQuantidade(${item.id}, 1)">+</button>
+                </div>
+              </div>
+              <div>
+                <div>${formatarMoeda(item.preco * item.quantidade)}</div>
+                <button class="btn-secundario" style="margin-top:8px;" onclick="removerDoCarrinho(${item.id})">Remover</button>
+              </div>
+            </div>
+          `).join('')}
+
+          <div class="resumo-pedido">
+            <div class="linha"><span>Subtotal</span><strong>${formatarMoeda(total)}</strong></div>
+            <div class="linha"><span>Entrega</span><strong>R$ 0,00</strong></div>
+            <div class="total linha"><span>Total</span><strong>${formatarMoeda(total)}</strong></div>
+          </div>
+
+          <div class="pagamento-opcoes">
+            <label class="opcao-pag ${pagamentoSelecionado === 'pix' ? 'selected' : ''}">
+              <input type="radio" name="pagamento" value="pix" ${pagamentoSelecionado === 'pix' ? 'checked' : ''} onchange="pagamentoSelecionado='pix'" />
+              <span>Pix</span>
+            </label>
+            <label class="opcao-pag ${pagamentoSelecionado === 'cartao' ? 'selected' : ''}">
+              <input type="radio" name="pagamento" value="cartao" ${pagamentoSelecionado === 'cartao' ? 'checked' : ''} onchange="pagamentoSelecionado='cartao'" />
+              <span>Cartão</span>
+            </label>
+            <label class="opcao-pag ${pagamentoSelecionado === 'dinheiro' ? 'selected' : ''}">
+              <input type="radio" name="pagamento" value="dinheiro" ${pagamentoSelecionado === 'dinheiro' ? 'checked' : ''} onchange="pagamentoSelecionado='dinheiro'" />
+              <span>Dinheiro</span>
+            </label>
+          </div>
+
+          <button class="btn-finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
+        </div>
+      `;
+    }
+
+    function removerDoCarrinho(id) {
+      carrinho = carrinho.filter(item => item.id !== id);
+      renderCarrinho();
+    }
+
+    async function finalizarPedido() {
+      if (!carrinho.length) {
+        alert('Seu carrinho está vazio!');
+        return;
+      }
+
+      const clienteId = Number(document.getElementById('cliente-id-input')?.value || 0);
+      if (!clienteId) {
+        alert('Informe o ID do cliente antes de finalizar o pedido.');
+        return;
+      }
+
+      const itens = carrinho.map(item => ({
+        produto_id: item.id,
+        nome: item.nome,
+        quantidade: item.quantidade,
+        valor_unitario: item.preco,
+        preco: item.preco
+      }));
+
+      const payload = {
+        cliente_id: clienteId,
+        pagamento: pagamentoSelecionado,
+        status_entrega: 'pendente',
+        items: itens
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/pedidos`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Não foi possível registrar o pedido');
+
+        carrinho = [];
+        pagamentoSelecionado = 'pix';
+        renderCarrinho();
+        carregarPedidosCliente();
+        const pedidosNav = document.querySelector('.tab[data-target="pedidos"], .client-menu-item[data-target="pedidos"]');
+        if (pedidosNav) trocarAba('pedidos', pedidosNav);
+        alert('Pedido realizado com sucesso!');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao finalizar pedido');
+      }
+    }
+
+    async function atualizarStatusPedido(id, status) {
+      try {
+        const response = await fetch(`${API_URL}/pedidos/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Não foi possível atualizar o status');
+        }
+
+        await carregarDadosAdmin();
+        alert(data.message || 'Status atualizado com sucesso');
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Erro ao atualizar status do pedido');
+      }
+    }
+
+    // ==================== PEDIDOS ====================
+    function renderPedidos() {
+      const tbody = document.getElementById('lista-pedidos');
+
+      if (!tbody) return;
+
+      if (pedidos.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align:center; color:#888; padding:40px;">
+              Nenhum pedido encontrado
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = pedidos.map(p => `
+        <tr>
+          <td>#${p.id}</td>
+          <td>${p.cliente_nome || 'Cliente não informado'}</td>
+          <td>${formatarMoeda(p.total)}</td>
+          <td>${p.pagamento || 'Pix'}</td>
+          <td>
+            <select class="status-select" onchange="atualizarStatusPedido(${p.id}, this.value)">
+              <option value="pendente" ${p.status_entrega === 'pendente' ? 'selected' : ''}>Pendente</option>
+              <option value="em_preparo" ${p.status_entrega === 'em_preparo' ? 'selected' : ''}>Em preparo</option>
+              <option value="a_caminho" ${p.status_entrega === 'a_caminho' ? 'selected' : ''}>À caminho</option>
+              <option value="entregue" ${p.status_entrega === 'entregue' ? 'selected' : ''}>Entregue</option>
+              <option value="cancelado" ${p.status_entrega === 'cancelado' ? 'selected' : ''}>Cancelado</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-danger" onclick="alert('Detalhes do pedido em desenvolvimento')">Ver</button>
           </td>
         </tr>
       `).join('');
