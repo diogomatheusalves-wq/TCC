@@ -1,0 +1,43 @@
+CREATE DATABASE IF NOT EXISTS digotb_;
+USE digotb_;
+
+CREATE TABLE IF NOT EXISTS clientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cpf VARCHAR(14) NOT NULL UNIQUE,
+  nome VARCHAR(150) NOT NULL,
+  telefone VARCHAR(20) NOT NULL,
+  email VARCHAR(150) NULL,
+  endereco VARCHAR(255) NULL,
+  obs TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS produtos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(150) NOT NULL,
+  descricao TEXT NULL,
+  preco DECIMAL(10,2) NOT NULL,
+  estoque INT NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'ativo',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS pedidos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL DEFAULT 0,
+  pagamento VARCHAR(50) DEFAULT 'pix',
+  status_entrega VARCHAR(30) DEFAULT 'pendente',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);
+
+CREATE TABLE IF NOT EXISTS pedido_itens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pedido_id INT NOT NULL,
+  produto_id INT NOT NULL,
+  quantidade INT NOT NULL DEFAULT 1,
+  valor_unitario DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+  FOREIGN KEY (produto_id) REFERENCES produtos(id)
+);
