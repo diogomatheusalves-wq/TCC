@@ -359,6 +359,31 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.produto-imagem-wrap {
+  width: 100%;
+  height: 180px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: #fdf2f7;
+}
+
+.produto-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mini-produto-imagem {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #f4dbe7;
+  display: block;
+}
+
 .produto-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 18px 32px rgba(233, 30, 99, 0.12);

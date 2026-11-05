@@ -449,6 +449,11 @@
               <textarea id="prod-descricao" rows="3" placeholder="Descrição do produto..."></textarea>
             </div>
 
+            <div class="form-group">
+              <label>Imagem (URL)</label>
+              <input type="url" id="prod-imagem" placeholder="https://images.unsplash.com/...">
+            </div>
+
             <button class="btn-primary" onclick="adicionarProduto()">Salvar Produto</button>
           </div>
 
@@ -456,6 +461,7 @@
             <table>
               <thead>
                 <tr>
+                  <th>Imagem</th>
                   <th>Produto</th>
                   <th>Preço</th>
                   <th>Estoque</th>
@@ -797,6 +803,7 @@
 
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('cliente-area').style.display = 'flex';
+        document.getElementById('admin-area').style.display = 'none';
         document.getElementById('cliente-login-panel').style.display = 'none';
         document.getElementById('role-buttons').style.display = 'flex';
 
@@ -922,6 +929,9 @@
 
     function entrarComo(tipo) {
       document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('cliente-area').style.display = 'none';
+      document.getElementById('admin-area').style.display = 'none';
+
       if (tipo === 'cliente') {
         document.getElementById('cliente-area').style.display = 'flex';
         carregarClientes();
@@ -1138,6 +1148,7 @@
     async function adicionarProduto() {
       const nome = document.getElementById('prod-nome').value.trim();
       const descricao = document.getElementById('prod-descricao').value.trim();
+      const imagem = document.getElementById('prod-imagem').value.trim();
       const preco = document.getElementById('prod-preco').value;
       const estoque = document.getElementById('prod-estoque').value;
       const status = document.getElementById('prod-status').value;
@@ -1151,7 +1162,7 @@
         const response = await fetch(`${API_URL}/produtos`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nome, descricao, preco, estoque, status })
+          body: JSON.stringify({ nome, descricao, imagem, preco, estoque, status })
         });
 
         const data = await response.json();
@@ -1162,6 +1173,7 @@
 
         document.getElementById('prod-nome').value = '';
         document.getElementById('prod-descricao').value = '';
+        document.getElementById('prod-imagem').value = '';
         document.getElementById('prod-preco').value = '';
         document.getElementById('prod-estoque').value = '';
         document.getElementById('prod-status').value = 'ativo';
@@ -1216,6 +1228,9 @@
 
       tbody.innerHTML = produtos.map(p => `
         <tr>
+          <td>
+            ${p.imagem ? `<img src="${p.imagem}" alt="${p.nome}" class="mini-produto-imagem" />` : '—'}
+          </td>
           <td><strong>${p.nome}</strong></td>
           <td>${formatarMoeda(p.preco)}</td>
           <td>${p.estoque}</td>
@@ -1255,21 +1270,27 @@
           </div>
         </div>
         <div class="produto-grid">
-          ${produtos.map(p => `
-            <div class="produto-card">
-              <div class="produto-topo">
-                <span class="produto-tag">Especial</span>
-                <span class="produto-price">${formatarMoeda(p.preco)}</span>
+          ${produtos.map(p => {
+            const imagem = p.imagem || 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=900&q=80';
+            return `
+              <div class="produto-card">
+                <div class="produto-imagem-wrap">
+                  <img class="produto-imagem" src="${imagem}" alt="${p.nome}" />
+                </div>
+                <div class="produto-topo">
+                  <span class="produto-tag">Especial</span>
+                  <span class="produto-price">${formatarMoeda(p.preco)}</span>
+                </div>
+                <h4>${p.nome}</h4>
+                <p>${p.descricao || 'Produto disponível no nosso cardápio.'}</p>
+                <div class="produto-info">
+                  <span>Estoque: ${p.estoque}</span>
+                  <span class="produto-status">Disponível</span>
+                </div>
+                <button class="btn-primary" onclick="adicionarAoCarrinho(${p.id})">Adicionar ao carrinho</button>
               </div>
-              <h4>${p.nome}</h4>
-              <p>${p.descricao || 'Produto disponível no nosso cardápio.'}</p>
-              <div class="produto-info">
-                <span>Estoque: ${p.estoque}</span>
-                <span class="produto-status">Disponível</span>
-              </div>
-              <button class="btn-primary" onclick="adicionarAoCarrinho(${p.id})">Adicionar ao carrinho</button>
-            </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       `;
 
